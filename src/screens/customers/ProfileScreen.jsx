@@ -102,6 +102,7 @@ export default function ProfileScreen({ navigation }) {
         </TouchableOpacity>
 
         <Button title="Hỗ trợ đơn hàng" onPress={()=>navigation.navigate('Support')} />
+        <Button title="Đổi mật khẩu" onPress={()=>navigation.navigate('Security')} />
         <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
           <Text style={styles.logoutText}>Đăng xuất</Text>
         </TouchableOpacity>

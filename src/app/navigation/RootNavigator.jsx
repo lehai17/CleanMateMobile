@@ -8,6 +8,7 @@ import CleanerTabs from "../../navigation/CleanerTabs";
 import { NotificationProvider } from "../../context/NotificationContext";
 import OrdersScreen from "../../screens/customers/OrdersScreen";
 import SupportScreen from '../../screens/SupportScreen';
+import SecurityScreen from '../../screens/SecurityScreen';
 
 const RootStack = createNativeStackNavigator();
 export default function RootNavigator() {
@@ -24,6 +25,7 @@ export default function RootNavigator() {
         {!user && <RootStack.Screen name="Auth" component={AuthStack} />}
         {user && <RootStack.Screen name="CustomerOrders" component={OrdersScreen} options={{ headerShown: true, title: "Đơn hàng của tôi" }} />}
         {user && <RootStack.Screen name="Support" component={SupportScreen} options={{headerShown:true,title:'Hỗ trợ'}} />}
+        {user && <RootStack.Screen name="Security" component={SecurityScreen} options={{headerShown:true,title:'Đổi mật khẩu'}} />}
       </RootStack.Navigator>
     </NavigationContainer></NotificationProvider>
   );
