@@ -5,6 +5,10 @@ export async function getOrders(userId) {
   return Array.isArray(data) ? data : data?.items || [];
 }
 
+export async function getRebooking(id) {
+  return (await api.get(`/api/orders/${id}/rebooking`)).data;
+}
+
 export async function deleteOrder(id) {
   await api.put(`/api/orders/${id}/cancel`);
 }

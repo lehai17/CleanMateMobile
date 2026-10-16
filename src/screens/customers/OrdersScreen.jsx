@@ -1,13 +1,15 @@
 import React, { useState, useCallback, useRef } from "react";
 import { View, Text, FlatList, Button, Alert, StyleSheet, TextInput, Linking, Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { getOrders, deleteOrder, confirmOrderCompletion, rescheduleOrder } from "../../api/orders";
+import { getOrders, deleteOrder, confirmOrderCompletion, rescheduleOrder, getRebooking } from "../../api/orders";
+import { randomUUID } from "expo-crypto";
 import { useAuth } from "../../context/AuthContext";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { paymentLabel } from "../../utils/payment";
 import { phoneLink } from "../../utils/contact";
 
 export default function OrdersScreen() {
+  const navigation = useNavigation();
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,6 +30,18 @@ export default function OrdersScreen() {
     finally { setLoading(false); }
   }, [user?.id]);
   useFocusEffect(useCallback(() => { load(); }, [load]));
+
+  const rebook = async id => {
+    if (pending.current) return;
+    pending.current = true; setBusyId(id);
+    try {
+      const template = await getRebooking(id);
+      navigation.navigate('Booking', { rebook: template, rebookKey: randomUUID() });
+    } catch (error) {
+      Alert.alert("Không thể đặt lại", error?.response?.data?.message || "Không thể tải thông tin. Vui lòng thử lại.");
+      if (error?.response?.status === 409) await load();
+    } finally { pending.current = false; setBusyId(null); }
+  };
 
   const callCleaner = async phone => {
     try { await Linking.openURL(phoneLink(phone)); }
@@ -97,6 +111,7 @@ export default function OrdersScreen() {
         <Text>{paymentLabel(item.paymentStatus, item.paymentMethod)}</Text>
         {item.paidAt && <Text>Thời gian xác nhận: {formatDate(item.paidAt)}</Text>}
         <Text>Trạng thái: {item.status}</Text>
+        {["Completed", "Cancelled"].includes(item.status) && <Button title="Đặt lại" disabled={busyId !== null} onPress={() => rebook(item.id)} />}
         {item.startedAt && <Text>Bắt đầu: {formatDate(item.startedAt)}</Text>}
         {item.completedAt && <Text>Hoàn thành: {formatDate(item.completedAt)}</Text>}
         {item.customerConfirmedAt && <View>

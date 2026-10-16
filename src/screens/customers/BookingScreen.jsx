@@ -15,7 +15,9 @@ import { createBooking } from "../../api/bookings";
 import { phoneLink } from "../../utils/contact";
 import { getServices } from "../../api/services";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useAuth } from "../../context/AuthContext";
+import { rebookingDraft, rebookingNotice } from "../../utils/rebooking";
 
 /* =========================
    Data & Helpers
@@ -858,29 +860,36 @@ function Success({ code, onNew, onHome }) {
    MAIN
 ========================= */
 export default function BookingScreen() {
+  const route = useRoute();
+  const { user } = useAuth();
   const [services, setServices] = useState(null);
   const [error, setError] = useState("");
-  const load = () => { setError(""); getServices().then(data => setServices(Object.fromEntries(data.map(s => [s.key, {
+  const catalogRequest = useRef(0);
+  const load = React.useCallback(() => { const request = ++catalogRequest.current; setServices(null); setError(""); getServices().then(data => {
+    if (request !== catalogRequest.current) return;
+    setServices(Object.fromEntries(data.map(s => [s.key, {
     ...SERVICE_PRESENTATION[s.key], name: s.name, price: s.hourlyRate, minHours: s.minHours, maxHours: s.maxHours,
-  }])))).catch(() => setError("Không thể tải dịch vụ và giá. Vui lòng thử lại.")); };
-  useEffect(() => { load(); }, []);
+  }]))); }).catch(() => { if (request === catalogRequest.current) setError("Không thể tải dịch vụ và giá. Vui lòng thử lại."); }); }, []);
+  useEffect(() => { load(); return () => { catalogRequest.current++; }; }, [load, route.params?.rebookKey, user?.id]);
   if (error) return <View style={{ padding: 20 }}><Text>{error}</Text><TouchableOpacity onPress={load}><Text>Thử lại</Text></TouchableOpacity></View>;
   if (!services) return <Text>Đang tải dịch vụ...</Text>;
   if (!Object.keys(services).length) return <Text>Hiện chưa có dịch vụ mở đặt lịch.</Text>;
-  return <BookingFlow services={services} />;
+  return <BookingFlow key={`${user?.id}:${route.params?.rebookKey || 'new'}`} services={services}
+    rebook={rebookingDraft(route.params?.rebook, services, user)} />;
 }
 
-function BookingFlow({ services: SERVICES }) {
+function BookingFlow({ services: SERVICES, rebook }) {
   const navigation = useNavigation();
-  const [currentStep, setCurrentStep] = useState(1);
-  const [selectedKey, setSelectedKey] = useState(null);
+  const [currentStep, setCurrentStep] = useState(rebook?.selectedKey ? 2 : 1);
+  const [rebookMessage, setRebookMessage] = useState(rebookingNotice(rebook));
+  const [selectedKey, setSelectedKey] = useState(rebook?.selectedKey ?? null);
   const service = selectedKey ? SERVICES[selectedKey] : null;
 
-  const [selectedDate, setSelectedDate] = useState(TODAY_STR);
+  const [selectedDate, setSelectedDate] = useState(toDateStr(new Date()));
   const [selectedTime, setSelectedTime] = useState("");
-  const [duration, setDuration] = useState(service?.minHours ?? 2);
+  const [duration, setDuration] = useState(rebook?.duration ?? service?.minHours ?? 2);
 
-  const [customerInfo, setCustomerInfo] = useState({
+  const [customerInfo, setCustomerInfo] = useState(rebook?.customerInfo ?? {
     name: "",
     phone: "",
     email: "",
@@ -952,6 +961,7 @@ function BookingFlow({ services: SERVICES }) {
   };
 
   const resetAll = () => {
+    setRebookMessage('');
     bookingAttempt.current = null;
     setCurrentStep(1);
     setSelectedKey(null);
@@ -986,6 +996,7 @@ function BookingFlow({ services: SERVICES }) {
       )}
 
       <ScrollView contentContainerStyle={{ padding: 16 }}>
+        {rebookMessage && currentStep !== 99 && <Text accessibilityRole="text" style={{ padding: 12, marginBottom: 16, backgroundColor: '#ecfdf5', color: '#065f46' }}>{rebookMessage}</Text>}
         {currentStep === 1 && (
           <StepService
             services={SERVICES}
