@@ -1,5 +1,5 @@
 import { t, useUiPreferences as useCleanMateUi } from './../../ui/Preferences';
-import { ActivityIndicator, View } from './../../ui/Preferences';
+import { ActivityIndicator, View, Text, Button } from './../../ui/Preferences';
 import { NavigationContainer } from './../../ui/Preferences';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useAuth } from "../../context/AuthContext";
@@ -14,8 +14,9 @@ import SecurityScreen from '../../screens/SecurityScreen';
 const RootStack = createNativeStackNavigator();
 export default function RootNavigator() {
   useCleanMateUi();
-  const { loading, user } = useAuth();
+  const { loading, user, restoreError, restore, logout, logoutFailed } = useAuth();
   if (loading) return <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}><ActivityIndicator /></View>;
+  if(restoreError)return <View style={{padding:24,gap:16}}><Text accessibilityRole="alert">{restoreError}</Text><Button title={logoutFailed?'Thử đăng xuất lại':'Thử kết nối lại'} onPress={restore}/><Button title="Đăng nhập bằng tài khoản khác" onPress={logout}/></View>;
   return (
     <NotificationProvider><NavigationContainer>
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
