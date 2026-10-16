@@ -17,3 +17,11 @@ Branch: `auth-rate-limits`.
 ```text
 Add authentication rate limits and password input safeguards
 ```
+
+## Email recovery and verification
+
+The login screen offers password recovery with a single-use email code. Security
+settings can request and confirm email verification. Reset revokes old sessions;
+verification does not grant a cleaner approval. Automated tests use a fake mailbox,
+not external email. A real SMTP relay must be configured and tested for deployment.
+See ../backend/ACCOUNT_RECOVERY.md for API, limits and restart/delivery caveats.
