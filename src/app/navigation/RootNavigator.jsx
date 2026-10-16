@@ -1,0 +1,28 @@
+import { ActivityIndicator, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useAuth } from "../../context/AuthContext";
+import AuthStack from "./AuthStack";
+import MainTabs from "./MainTabs";
+import CleanerTabs from "../../navigation/CleanerTabs";
+import { NotificationProvider } from "../../context/NotificationContext";
+import OrdersScreen from "../../screens/customers/OrdersScreen";
+
+const RootStack = createNativeStackNavigator();
+export default function RootNavigator() {
+  const { loading, user } = useAuth();
+  if (loading) return <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}><ActivityIndicator /></View>;
+  return (
+    <NotificationProvider><NavigationContainer>
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+        {user?.role === "Cleaner" && user?.isCleaner ? (
+          <RootStack.Screen name="CleanerTabs" component={CleanerTabs} />
+        ) : (
+          <RootStack.Screen name="Root" component={MainTabs} />
+        )}
+        {!user && <RootStack.Screen name="Auth" component={AuthStack} />}
+        {user && <RootStack.Screen name="CustomerOrders" component={OrdersScreen} options={{ headerShown: true, title: "Đơn hàng của tôi" }} />}
+      </RootStack.Navigator>
+    </NavigationContainer></NotificationProvider>
+  );
+}
