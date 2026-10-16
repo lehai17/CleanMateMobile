@@ -7,6 +7,7 @@ import MainTabs from "./MainTabs";
 import CleanerTabs from "../../navigation/CleanerTabs";
 import { NotificationProvider } from "../../context/NotificationContext";
 import OrdersScreen from "../../screens/customers/OrdersScreen";
+import SupportScreen from '../../screens/SupportScreen';
 
 const RootStack = createNativeStackNavigator();
 export default function RootNavigator() {
@@ -22,6 +23,7 @@ export default function RootNavigator() {
         )}
         {!user && <RootStack.Screen name="Auth" component={AuthStack} />}
         {user && <RootStack.Screen name="CustomerOrders" component={OrdersScreen} options={{ headerShown: true, title: "Đơn hàng của tôi" }} />}
+        {user && <RootStack.Screen name="Support" component={SupportScreen} options={{headerShown:true,title:'Hỗ trợ'}} />}
       </RootStack.Navigator>
     </NavigationContainer></NotificationProvider>
   );

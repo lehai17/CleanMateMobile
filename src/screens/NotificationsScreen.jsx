@@ -50,7 +50,7 @@ export default function NotificationsScreen({ navigation }) {
         <Text style={{ fontWeight: "700" }}>{item.title}</Text>
         <Text>{item.message}</Text>
         <Text>{new Date(item.createdAt).toLocaleString("vi-VN")} · {item.readAt ? "Đã đọc" : "Chưa đọc"}</Text>
-        <Button title={item.target === "Profile" ? "Xem hồ sơ" : `Xem đơn CM${item.bookingId}`} onPress={() => navigation.navigate(item.target === "Profile" ? user?.isCleaner ? "CleanerProfile" : "Profile" : item.target === "CleanerJobs" ? "Calendar" : user?.isCleaner ? "CustomerOrders" : "Orders")} />
+        <Button title={item.target === "Support" ? "Xem hỗ trợ" : item.target === "Profile" ? "Xem hồ sơ" : `Xem đơn CM${item.bookingId}`} onPress={() => navigation.navigate(item.target === "Support" ? "Support" : item.target === "Profile" ? user?.isCleaner ? "CleanerProfile" : "Profile" : item.target === "CleanerJobs" ? "Calendar" : user?.isCleaner ? "CustomerOrders" : "Orders")} />
         {!item.readAt && <Button title="Đánh dấu đã đọc" disabled={loading || busy} onPress={() => mark(item)} />}
       </View>} />
   </View>;
