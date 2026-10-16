@@ -165,7 +165,7 @@ export default function LoginScreen({ navigation }) {
                 </Pressable>
                 <TouchableOpacity
                   onPress={() =>
-                    Alert.alert("Quên mật khẩu", "Tính năng đang được phát triển.")
+                    navigation.navigate('ForgotPassword')
                   }
                 >
                   <Text style={[s.link, { color: "#059669" }]}>Quên mật khẩu?</Text>
