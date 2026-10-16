@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import * as SecureStore from "expo-secure-store";
-import { TOKEN_KEY } from "../api/axios";
+import { api, TOKEN_KEY } from "../api/axios";
 import { meApi } from "../api/auth";
 
 const Ctx = createContext(undefined);
@@ -36,6 +36,13 @@ export function AuthProvider({ children }) {
     } finally { setLoading(false); }
   };
   useEffect(() => { restore(); }, []);
+  useEffect(()=>{
+    const id=api.interceptors.response.use(response=>response,error=>{
+      if(token && error?.response?.status===401 && !error.config?.url?.endsWith('/auth/login'))logout();
+      return Promise.reject(error);
+    });
+    return()=>api.interceptors.response.eject(id);
+  },[token]);
   const value = useMemo(() => ({ user, token, login, logout, restore, refreshUser, loading }), [user, token, loading]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

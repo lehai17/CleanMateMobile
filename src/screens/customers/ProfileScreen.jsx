@@ -1,6 +1,6 @@
 // src/screens/ProfileScreen.js
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, TextInput, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, TextInput, ScrollView, Button } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthContext";
@@ -101,6 +101,8 @@ export default function ProfileScreen({ navigation }) {
           </Text>
         </TouchableOpacity>
 
+        <Button title="Hỗ trợ đơn hàng" onPress={()=>navigation.navigate('Support')} />
+        <Button title="Đổi mật khẩu" onPress={()=>navigation.navigate('Security')} />
         <TouchableOpacity onPress={logout} style={styles.logoutBtn}>
           <Text style={styles.logoutText}>Đăng xuất</Text>
         </TouchableOpacity>
