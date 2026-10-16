@@ -38,6 +38,7 @@ export default function LoginScreen({ navigation }) {
   }, []);
 
   const onSubmit = async () => {
+    if (loading) return;
     if (!email.trim() || !password.trim()) {
       Alert.alert("Thiếu thông tin", "Vui lòng nhập email và mật khẩu.");
       return;
@@ -56,6 +57,7 @@ export default function LoginScreen({ navigation }) {
       await login(res.user, res.token);
 
     } catch (err) {
+      setPassword('');
       Alert.alert(
         "Đăng nhập thất bại",
         err?.response?.data?.message || "Sai email hoặc mật khẩu."

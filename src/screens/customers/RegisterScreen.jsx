@@ -56,6 +56,7 @@ export default function RegisterScreen({ navigation }) {
   };
 
   const onSubmit = async () => {
+    if (loading) return;
     if (!validate()) return;
     setLoading(true);
     try {
@@ -167,6 +168,7 @@ export default function RegisterScreen({ navigation }) {
               <View style={{ position: "relative" }}>
                 <TextInput
                   value={form.password}
+                  maxLength={72}
                   onChangeText={(t) => setField("password", t)}
                   secureTextEntry={!showPwd}
                   placeholder="Nhập mật khẩu (ít nhất 8 ký tự)"
@@ -188,6 +190,7 @@ export default function RegisterScreen({ navigation }) {
               <View style={{ position: "relative" }}>
                 <TextInput
                   value={form.confirmPassword}
+                  maxLength={72}
                   onChangeText={(t) => setField("confirmPassword", t)}
                   secureTextEntry={!showConfirmPwd}
                   placeholder="Nhập lại mật khẩu"
