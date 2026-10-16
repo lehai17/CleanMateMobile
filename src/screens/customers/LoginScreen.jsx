@@ -1,22 +1,14 @@
+import { useUiPreferences as useCleanMateUi } from './../../ui/Preferences';
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Pressable,
-  Alert,
-  StyleSheet,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { StyleSheet, Platform } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Pressable, Alert, ActivityIndicator, KeyboardAvoidingView } from './../../ui/Preferences';
 import { LinearGradient } from "expo-linear-gradient";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../context/AuthContext";
 import { loginApi } from "../../api/auth";
 
 export default function LoginScreen({ navigation }) {
+  useCleanMateUi();
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

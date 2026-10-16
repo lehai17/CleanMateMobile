@@ -1,12 +1,15 @@
+import { Raw, useUiPreferences as useCleanMateUi } from './../../ui/Preferences';
 // src/screens/ProfileScreen.js
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert, TextInput, ScrollView, Button } from "react-native";
+import { StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, TextInput, ScrollView, Button } from './../../ui/Preferences';
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../context/AuthContext";
 import { registerCleanerApi, resubmitCleanerApi, meApi } from "../../api/auth";
 
 export default function ProfileScreen({ navigation }) {
+  useCleanMateUi();
   const { user, logout, refreshUser } = useAuth();
   const [registering, setRegistering] = useState(false);
   const [city, setCity] = useState(user?.cleanerProfile?.city || "Ha Noi");
@@ -72,8 +75,8 @@ export default function ProfileScreen({ navigation }) {
           source={{ uri: "https://i.pravatar.cc/150?u=" + user.email }}
           style={styles.avatar}
         />
-        <Text style={styles.name}>{user.fullName}</Text>
-        <Text style={styles.email}>{user.email}</Text>
+        <Text style={styles.name}>{<Raw>{user.fullName}</Raw>}</Text>
+        <Text style={styles.email}>{<Raw>{user.email}</Raw>}</Text>
       </LinearGradient>
 
       {/* Body */}
@@ -86,7 +89,7 @@ export default function ProfileScreen({ navigation }) {
         {/* Link đăng ký Cleaner */}
         {user.cleanerProfile && <View>
           <Text>Hồ sơ cleaner: {({ Pending: "Chờ duyệt", Rejected: "Từ chối", NeedsInfo: "Cần bổ sung" })[user.cleanerProfile.reviewStatus] || user.cleanerProfile.reviewStatus}</Text>
-          {user.cleanerProfile.reviewReason && <Text>Lý do: {user.cleanerProfile.reviewReason}</Text>}
+          {user.cleanerProfile.reviewReason && <Text>Lý do: {<Raw>{user.cleanerProfile.reviewReason}</Raw>}</Text>}
           <TouchableOpacity onPress={() => meApi().then(refreshUser).catch(() => Alert.alert("Lỗi", "Không thể tải lại hồ sơ."))}><Text>Tải lại trạng thái hồ sơ</Text></TouchableOpacity>
         </View>}
         <TextInput accessibilityLabel="Thành phố làm việc" value={city} onChangeText={setCity} maxLength={200} placeholder="Thành phố làm việc" />

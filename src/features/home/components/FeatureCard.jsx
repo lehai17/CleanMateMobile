@@ -1,6 +1,8 @@
-import { Text, View } from "react-native";
+import { useUiPreferences as useCleanMateUi } from './../../../ui/Preferences';
+import { Text, View } from './../../../ui/Preferences';
 
 export default function FeatureCard({ icon, title, description }) {
+  useCleanMateUi();
   return (
     <View style={{ flex: 1, marginHorizontal: 4, borderRadius: 16, borderWidth: 1, borderColor: "#BBF7D0", backgroundColor: "#F0FDF4", padding: 16, alignItems: "center" }}>
       <Text style={{ marginBottom: 8, fontSize: 28 }}>{icon}</Text>

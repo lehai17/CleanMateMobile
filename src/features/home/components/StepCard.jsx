@@ -1,6 +1,8 @@
-import { Text, View } from "react-native";
+import { useUiPreferences as useCleanMateUi } from './../../../ui/Preferences';
+import { Text, View } from './../../../ui/Preferences';
 
 export default function StepCard({ number, title, description }) {
+  useCleanMateUi();
   return (
     <View style={{ flex: 1, marginHorizontal: 4, alignItems: "center" }}>
       <View style={{ width: 56, height: 56, borderRadius: 9999, marginBottom: 6, alignItems: "center", justifyContent: "center", backgroundColor: "#059669" }}>

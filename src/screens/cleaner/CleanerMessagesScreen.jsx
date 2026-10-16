@@ -1,13 +1,10 @@
+import { Raw, useUiPreferences as useCleanMateUi } from './../../ui/Preferences';
 import React from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from './../../ui/Preferences';
 
 const CleanerMessagesScreen = () => {
+  useCleanMateUi();
   const chats = [
     {
       id: 1,
@@ -40,16 +37,16 @@ const CleanerMessagesScreen = () => {
         <TouchableOpacity key={chat.id} style={styles.chatCard}>
           <View style={[styles.avatar, { backgroundColor: chat.color }]}>
             <Text style={styles.avatarText}>
-              {chat.name.split(" ").pop()[0]}
+              {<Raw>{chat.name.split(" ").pop()[0]}</Raw>}
             </Text>
           </View>
           <View style={{ flex: 1 }}>
             <View style={styles.chatHeader}>
-              <Text style={styles.name}>{chat.name}</Text>
+              <Text style={styles.name}>{<Raw>{chat.name}</Raw>}</Text>
               <Text style={styles.time}>{chat.time}</Text>
             </View>
             <Text style={styles.message} numberOfLines={1}>
-              {chat.message}
+              {<Raw>{chat.message}</Raw>}
             </Text>
           </View>
         </TouchableOpacity>

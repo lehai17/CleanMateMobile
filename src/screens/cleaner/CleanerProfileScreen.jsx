@@ -1,13 +1,10 @@
+import { useUiPreferences as useCleanMateUi } from './../../ui/Preferences';
 import React from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from './../../ui/Preferences';
 
 const CleanerProfileScreen = () => {
+  useCleanMateUi();
   return (
     <ScrollView style={styles.container}>
       {/* Header */}

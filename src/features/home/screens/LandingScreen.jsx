@@ -1,4 +1,5 @@
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useUiPreferences as useCleanMateUi } from './../../../ui/Preferences';
+import { ScrollView, Text, TouchableOpacity, View } from './../../../ui/Preferences';
 import { LinearGradient } from "expo-linear-gradient";
 import FeatureCard from "../components/FeatureCard";
 import ServiceCard from "../components/ServiceCard";
@@ -6,6 +7,7 @@ import StepCard from "../components/StepCard";
 import { featureItems, serviceItems, stepItems } from "../data/homeContent";
 
 export default function LandingScreen({ navigation }) {
+  useCleanMateUi();
   const onBook = () => navigation.navigate("Booking");
   const onExplore = () => navigation.navigate("Services");
 

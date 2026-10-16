@@ -1,3 +1,4 @@
+import { t, useUiPreferences as useCleanMateUi } from './../../ui/Preferences';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import LandingScreen from "../../features/home/screens/LandingScreen";
@@ -22,6 +23,7 @@ function ProtectedScreen({ navigation, children }) {
 }
 
 function BookingProtected(props) {
+  useCleanMateUi();
   return (
     <ProtectedScreen {...props}>
       <BookingScreen />
@@ -30,6 +32,7 @@ function BookingProtected(props) {
 }
 
 function OrdersProtected(props) {
+  useCleanMateUi();
   return (
     <ProtectedScreen {...props}>
       <OrdersScreen />
@@ -38,17 +41,19 @@ function OrdersProtected(props) {
 }
 
 function NotificationsProtected(props) {
+  useCleanMateUi();
   return <ProtectedScreen {...props}><NotificationsScreen {...props} /></ProtectedScreen>;
 }
 
 export default function MainTabs() {
+  const {palette}=useCleanMateUi();
   const { unreadCount } = useNotifications();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: true,
-        tabBarActiveTintColor: "#059669",
-        tabBarInactiveTintColor: "#6B7280",
+        tabBarActiveTintColor: palette.accent,
+        tabBarInactiveTintColor: palette.muted,
         tabBarIcon: ({ color, size }) => {
           const map = {
             Home: "home",
@@ -62,12 +67,12 @@ export default function MainTabs() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={LandingScreen} options={{ title: "Trang chủ" }} />
-      <Tab.Screen name="Services" component={ServicesScreen} options={{ title: "Dịch vụ" }} />
-      <Tab.Screen name="Booking" component={BookingProtected} options={{ title: "Đặt lịch" }} />
-      <Tab.Screen name="Orders" component={OrdersProtected} options={{ title: "Đơn hàng" }} />
-      <Tab.Screen name="Notifications" component={NotificationsProtected} options={{ title: "Thông báo", tabBarBadge: unreadCount > 0 ? unreadCount : undefined }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: "Hồ sơ" }} />
+      <Tab.Screen name="Home" component={LandingScreen} options={{ title: t("Trang chủ") }} />
+      <Tab.Screen name="Services" component={ServicesScreen} options={{ title: t("Dịch vụ") }} />
+      <Tab.Screen name="Booking" component={BookingProtected} options={{ title: t("Đặt lịch") }} />
+      <Tab.Screen name="Orders" component={OrdersProtected} options={{ title: t("Đơn hàng") }} />
+      <Tab.Screen name="Notifications" component={NotificationsProtected} options={{ title: t("Thông báo"), tabBarBadge: unreadCount > 0 ? unreadCount : undefined }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: t("Hồ sơ") }} />
     </Tab.Navigator>
   );
 }
