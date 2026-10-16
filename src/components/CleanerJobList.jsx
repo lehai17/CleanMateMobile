@@ -1,10 +1,12 @@
+import { Raw, useUiPreferences as useCleanMateUi } from './../ui/Preferences';
 import { useCallback, useRef, useState } from "react";
-import { ActivityIndicator, Alert, Button, FlatList, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Button, FlatList, Text, View } from './../ui/Preferences';
 import { useFocusEffect } from "@react-navigation/native";
 import { completeCleanerJob, confirmCashPayment, getCleanerJobs, startCleanerJob } from "../api/jobs";
 import { paymentLabel } from "../utils/payment";
 
 export default function CleanerJobList({ chronological = false }) {
+  useCleanMateUi();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -51,8 +53,8 @@ export default function CleanerJobList({ chronological = false }) {
       renderItem={({ item }) => <View style={{ padding: 16, marginTop: 12, backgroundColor: "#f3f4f6", borderRadius: 12 }}>
         <Text style={{ fontWeight: "700" }}>CM{item.id} · {item.status}</Text>
         <Text>Lịch dự kiến: {formatDate(item.startTime)} → {formatDate(new Date(new Date(item.startTime).getTime() + item.durationHours * 3600000))} · {item.durationHours} giờ</Text>
-        <Text>{item.address}</Text>
-        <Text>{item.customerName} · {item.customerPhone}</Text>
+        <Text>{<Raw>{item.address}</Raw>}</Text>
+        <Text>{<Raw>{item.customerName}</Raw>} · {item.customerPhone}</Text>
         <Text>{item.price.toLocaleString("vi-VN")} đ</Text>
         <Text>{paymentLabel(item.paymentStatus, item.paymentMethod)}</Text>
         {item.paidAt && <Text>Thời gian xác nhận: {formatDate(item.paidAt)}</Text>}

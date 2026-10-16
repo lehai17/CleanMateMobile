@@ -1,6 +1,8 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { useUiPreferences as useCleanMateUi } from './../../../ui/Preferences';
+import { Text, TouchableOpacity, View } from './../../../ui/Preferences';
 
 export default function ServiceCard({ icon, title, description, onBook }) {
+  useCleanMateUi();
   return (
     <View style={{ width: "48%", borderRadius: 16, backgroundColor: "#ffffff", padding: 16, borderWidth: 1, borderColor: "#E5E7EB" }}>
       <Text style={{ marginBottom: 8, fontSize: 28 }}>{icon}</Text>

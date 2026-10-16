@@ -1,16 +1,9 @@
+import { Raw, useUiPreferences as useCleanMateUi } from './../../ui/Preferences';
 // src/screens/BookingScreen.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { randomUUID } from "expo-crypto";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Pressable,
-  TextInput,
-  Alert,
-} from "react-native";
+import { StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Pressable, TextInput, Alert } from './../../ui/Preferences';
 import { createBooking } from "../../api/bookings";
 import { phoneLink } from "../../utils/contact";
 import { getServices } from "../../api/services";
@@ -56,6 +49,7 @@ const TODAY_STR = toDateStr(new Date());
    Progress Steps
 ========================= */
 function ProgressSteps({ currentStep = 1 }) {
+  useCleanMateUi();
   const steps = [
     { id: 1, name: "Chọn dịch vụ" },
     { id: 2, name: "Chọn thời gian" },
@@ -104,6 +98,7 @@ function ProgressSteps({ currentStep = 1 }) {
    Step 1: Chọn dịch vụ
 ========================= */
 function ServiceCard({ k, data, selected, onSelect }) {
+  useCleanMateUi();
   const desc =
     k === "cleaning"
       ? "Vệ sinh toàn bộ nhà cửa, lau chùi, hút bụi, sắp xếp đồ"
@@ -144,6 +139,7 @@ function ServiceCard({ k, data, selected, onSelect }) {
 }
 
 function StepService({ selected, setSelected, onNext, services }) {
+  useCleanMateUi();
   return (
     <>
       <View style={styles.sectionHeader}>
@@ -183,6 +179,7 @@ function StepService({ selected, setSelected, onNext, services }) {
    Step 2: Calendar + Time + Duration
 ========================= */
 function Calendar({ selectedDate, onDateSelect }) {
+  useCleanMateUi();
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
@@ -299,6 +296,7 @@ function TimeAndDuration({
   setSelectedTime,
   totalPrice,
 }) {
+  useCleanMateUi();
   const minHours = service?.minHours ?? 2;
 
   const [showPicker, setShowPicker] = useState(false);
@@ -419,6 +417,7 @@ function StepTime({
   onBack,
   totalPrice,
 }) {
+  useCleanMateUi();
   const canNext =
     selectedDate &&
     selectedTime &&
@@ -487,6 +486,7 @@ function StepTime({
    Step 3: Customer Info + Summary
 ========================= */
 function Row({ label, value, className }) {
+  useCleanMateUi();
   return (
     <View style={[styles.rowBetween, className]}>
       <Text style={styles.rowLabel}>{label}</Text>
@@ -502,6 +502,7 @@ function StepCustomer({
   onBack,
   pricing,
 }) {
+  useCleanMateUi();
   const setField = (k, v) => setCustomerInfo((p) => ({ ...p, [k]: v }));
   const { name, phone, email: rawEmail, address } = customerInfo;
 
@@ -685,6 +686,7 @@ function StepConfirm({
   onConfirm,
   submitting,
 }) {
+  useCleanMateUi();
   if (!service || !customer) return null;
   return (
     <>
@@ -732,19 +734,19 @@ function StepConfirm({
             <View style={styles.row2}>
               <View style={{ flex: 1 }}>
                 <Text style={styles.kv}>
-                  Họ tên: <Text style={styles.kvV}>{customer.name}</Text>
+                  Họ tên: <Text style={styles.kvV}>{<Raw>{customer.name}</Raw>}</Text>
                 </Text>
                 <Text style={styles.kv}>
-                  Điện thoại: <Text style={styles.kvV}>{customer.phone}</Text>
+                  Điện thoại: <Text style={styles.kvV}>{<Raw>{customer.phone}</Raw>}</Text>
                 </Text>
                 <Text style={styles.kv}>
                   Email:{" "}
-                  <Text style={styles.kvV}>{customer.email || "Không có"}</Text>
+                  <Text style={styles.kvV}>{<Raw>{customer.email || "Không có"}</Raw>}</Text>
                 </Text>
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.kv}>
-                  Địa chỉ: <Text style={styles.kvV}>{customer.address}</Text>
+                  Địa chỉ: <Text style={styles.kvV}>{<Raw>{customer.address}</Raw>}</Text>
                 </Text>
                 <Text style={styles.kv}>
                   Thanh toán:{" "}
@@ -754,7 +756,7 @@ function StepConfirm({
                 </Text>
                 {!!customer.notes?.trim() && (
                   <Text style={styles.kv}>
-                    Ghi chú: <Text style={styles.kvV}>{customer.notes}</Text>
+                    Ghi chú: <Text style={styles.kvV}>{<Raw>{customer.notes}</Raw>}</Text>
                   </Text>
                 )}
               </View>
@@ -819,6 +821,7 @@ function StepConfirm({
    Success
 ========================= */
 function Success({ code, onNew, onHome }) {
+  useCleanMateUi();
   return (
     <View style={{ padding: 16 }}>
       <View style={styles.panelCenter}>
@@ -860,6 +863,7 @@ function Success({ code, onNew, onHome }) {
    MAIN
 ========================= */
 export default function BookingScreen() {
+  useCleanMateUi();
   const route = useRoute();
   const { user } = useAuth();
   const [services, setServices] = useState(null);
@@ -879,6 +883,7 @@ export default function BookingScreen() {
 }
 
 function BookingFlow({ services: SERVICES, rebook }) {
+  useCleanMateUi();
   const navigation = useNavigation();
   const [currentStep, setCurrentStep] = useState(rebook?.selectedKey ? 2 : 1);
   const [rebookMessage, setRebookMessage] = useState(rebookingNotice(rebook));

@@ -1,21 +1,12 @@
+import { Raw, useUiPreferences as useCleanMateUi } from './../../ui/Preferences';
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Alert,
-  StyleSheet,
-  TouchableOpacity,
-  Pressable,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, Platform } from 'react-native';
+import { View, Text, TextInput, Alert, TouchableOpacity, Pressable, ScrollView, KeyboardAvoidingView, ActivityIndicator } from './../../ui/Preferences';
 import { LinearGradient } from "expo-linear-gradient";
 import { registerApi } from "../../api/auth";
 
 export default function RegisterScreen({ navigation }) {
+  useCleanMateUi();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -135,7 +126,7 @@ export default function RegisterScreen({ navigation }) {
                 placeholder="Nhập họ và tên của bạn"
                 style={[s.input, errors.fullName && s.inputError]}
               />
-              {errors.fullName ? <Text style={s.err}>{errors.fullName}</Text> : null}
+              {errors.fullName ? <Text style={s.err}>{<Raw>{errors.fullName}</Raw>}</Text> : null}
             </View>
 
             <View style={s.fieldWrap}>
@@ -148,7 +139,7 @@ export default function RegisterScreen({ navigation }) {
                 placeholder="Nhập email của bạn"
                 style={[s.input, errors.email && s.inputError]}
               />
-              {errors.email ? <Text style={s.err}>{errors.email}</Text> : null}
+              {errors.email ? <Text style={s.err}>{<Raw>{errors.email}</Raw>}</Text> : null}
             </View>
 
             <View style={s.fieldWrap}>
@@ -160,7 +151,7 @@ export default function RegisterScreen({ navigation }) {
                 placeholder="Nhập số điện thoại"
                 style={[s.input, errors.phone && s.inputError]}
               />
-              {errors.phone ? <Text style={s.err}>{errors.phone}</Text> : null}
+              {errors.phone ? <Text style={s.err}>{<Raw>{errors.phone}</Raw>}</Text> : null}
             </View>
 
             <View style={s.fieldWrap}>

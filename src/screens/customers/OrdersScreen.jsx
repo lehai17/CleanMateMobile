@@ -1,5 +1,7 @@
+import { Raw, useUiPreferences as useCleanMateUi } from './../../ui/Preferences';
 import React, { useState, useCallback, useRef } from "react";
-import { View, Text, FlatList, Button, Alert, StyleSheet, TextInput, Linking, Platform } from "react-native";
+import { StyleSheet, Linking, Platform } from 'react-native';
+import { View, Text, FlatList, Button, Alert, TextInput } from './../../ui/Preferences';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { getOrders, deleteOrder, confirmOrderCompletion, rescheduleOrder, getRebooking } from "../../api/orders";
 import { randomUUID } from "expo-crypto";
@@ -9,6 +11,7 @@ import { paymentLabel } from "../../utils/payment";
 import { phoneLink } from "../../utils/contact";
 
 export default function OrdersScreen() {
+  useCleanMateUi();
   const navigation = useNavigation();
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
@@ -98,12 +101,12 @@ export default function OrdersScreen() {
       renderItem={({ item }) => <View style={styles.card}>
         <Text style={styles.code}>CM{String(item.id).padStart(6, "0")}</Text>
         <Text>Ngày: {formatDate(item.date || item.startTime || item.createdAt)}</Text>
-        <Text>Địa chỉ: {item.address || "-"}</Text>
-        {item.contactName && <Text>Người liên hệ: {item.contactName}</Text>}
-        {item.contactPhone && <Text>SĐT liên hệ: {item.contactPhone}</Text>}
+        <Text>Địa chỉ: {<Raw>{item.address || "-"}</Raw>}</Text>
+        {item.contactName && <Text>Người liên hệ: {<Raw>{item.contactName}</Raw>}</Text>}
+        {item.contactPhone && <Text>SĐT liên hệ: {<Raw>{item.contactPhone}</Raw>}</Text>}
         {item.cleaner ? <View>
-          <Text>Cleaner nhận việc: {item.cleaner.name}</Text>
-          <Text>{item.cleaner.phoneNumber || "Chưa cập nhật số điện thoại"}</Text>
+          <Text>Cleaner nhận việc: {<Raw>{item.cleaner.name}</Raw>}</Text>
+          <Text>{<Raw>{item.cleaner.phoneNumber || "Chưa cập nhật số điện thoại"}</Raw>}</Text>
           {phoneLink(item.cleaner.phoneNumber) && <Button title="Gọi cleaner" onPress={() => callCleaner(item.cleaner.phoneNumber)} />}
         </View> : <Text>Chưa có cleaner nhận việc</Text>}
         <Text>Giá: {Number(item.price || 0).toLocaleString("vi-VN")} đ</Text>
@@ -117,7 +120,7 @@ export default function OrdersScreen() {
         {item.customerConfirmedAt && <View>
           <Text>Khách đã xác nhận hoàn thành</Text>
           <Text>Đánh giá: {item.customerRating}/5 sao</Text>
-          {item.customerReview && <Text>{item.customerReview}</Text>}
+          {item.customerReview && <Text>{<Raw>{item.customerReview}</Raw>}</Text>}
         </View>}
         <Button title="Hủy đơn" color="#e11d48" onPress={() => cancel(item.id)}
           disabled={busyId !== null || item.status !== "Pending" || new Date(item.date || item.startTime) <= new Date()} />
